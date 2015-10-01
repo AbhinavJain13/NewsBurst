@@ -53,3 +53,12 @@ class Stories(Controller):
 	# 	result = self.models['Story'].import_stories()
 
 	# 	return redirect('/show_stories')
+
+
+    # def index(self):
+    #     return self.load_view('/stories/index.html')
+
+	def import_stories(self):
+		print '*** import_stories'
+		return self.models['Story'].import_stories()
+

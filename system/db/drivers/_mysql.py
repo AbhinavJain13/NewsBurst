@@ -3,7 +3,7 @@ import collections
 
 def _convert(data):
     if isinstance(data, basestring):
-        return str(data)
+        return data
     elif isinstance(data, collections.Mapping):
         return dict(map(_convert, data.iteritems()))
     elif isinstance(data, collections.Iterable):

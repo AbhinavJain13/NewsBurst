@@ -22,6 +22,7 @@ for i in range(10):
 	print res2['results'][i]['subsection'].encode('utf-8')
 	print res2['results'][i]['title'].encode('utf-8')
 	print res2['results'][i]['abstract'].encode('utf-8')
+	print res2['results'][i]['url'].encode('utf-8')
 	print
 
 # zzz.encode('utf-8')

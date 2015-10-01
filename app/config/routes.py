@@ -4,7 +4,6 @@
     Put Routing rules here
 """
 from system.core.router import routes
-
 routes['default_controller'] = 'Users'
 routes['POST']['/users'] = 'Users#create'
 routes['GET']['/users/<id>'] = 'Users#show'
@@ -14,5 +13,4 @@ routes['GET']['/show_stories'] = 'Stories#show'
 routes['GET']['/load_story/<id>'] = 'Stories#load'
 routes['POST']['/save_story'] = 'Stories#save'
 routes['GET']['/story_refresh'] = 'Stories#refresh'
-
-# routes['GET']['/articles/import'] = 'Stories#import_articles'
+routes['GET']['/stories/import']  = 'Stories#import_stories'
