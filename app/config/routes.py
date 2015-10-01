@@ -21,8 +21,8 @@ routes['POST']['/users']          = 'Users#create'
 routes['GET']['/users/<id>']      = 'Users#show'
 routes['POST']['/login']          = 'Users#login'
 routes['GET']['/logout']          = 'Users#logout'
-routes['GET']['/articles']        = 'Articles#index'
-routes['GET']['/articles/import'] = 'Articles#import_articles'
+routes['GET']['/stories']         = 'Stories#index'
+routes['GET']['/stories/import']  = 'Stories#import_stories'
 
 """
     You can add routes and specify their handlers as follows:

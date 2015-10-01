@@ -15,7 +15,7 @@ class Users(Controller):
 		newuser = request.form
 		result = self.models['User'].create_user(newuser)
 		if result is True:
-			return redirect('/articles')
+			return redirect('/stories')
 		else:
 			return redirect('/')
 
@@ -45,7 +45,7 @@ class Users(Controller):
 			session['lname'] = results[0]['lname']
 			session['email'] = results[0]['email']
 			print '*** session id: {}'.format(session['id'])
-			return redirect('/articles')
+			return redirect('/stories')
 		else:
 			flash('Bad password or email', 'error')
 			return redirect('/')
