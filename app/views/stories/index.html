@@ -1,0 +1,156 @@
+<html>
+<head>
+<title>NewsBurst</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/jquery-ui.min.css') }}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/jquery.highlighttextarea.css') }}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/styles.css') }}">
+	<script type="text/javascript" src="{{url_for('static', filename='jquery-2.1.0.min.js') }}"></script>
+	<!--<script src="{{url_for('static', filename='jquery-ui.min.js') }}"></script> -->
+	<script src="{{url_for('static', filename='jquery.highlighttextarea.js') }}"></script>	
+	<script type="text/javascript" src="{{url_for('static', filename='open-spritz.js') }}"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function()
+	{  
+		var wpm = 1;
+		$('#go').on('click', function() {
+			if($('#go').html() == "Start") {
+			  wpm = parseInt($('#wpm').val(), 10);
+			  $("#go").html('Pause');
+				ospritz.init($('#text'), wpm, $('#word'));
+			} else if ($('#go').html() == "Pause") {
+				$("#go").html('Resume');
+			  ospritz.pause();
+			} else if ($('#go').html() == "Resume") {
+				$("#go").html('Pause');
+			  ospritz.resume();
+			}
+			
+		});
+		$('#restart').on('click', function() {
+			  ospritz.pause();
+			  ospritz.abort();
+			  wpm = parseInt($('#wpm').val(), 10);
+			  $("#go").html('Pause');
+				ospritz.init($('#text'), wpm, $('#word'));
+		});
+		
+		$(document).keydown(function(e) {
+      if (e.which == 32){//space bar
+      	var a = e.target;
+      	var b = $('#text')[0];
+      	if (a != b) {
+          e.preventDefault();
+          if ($('#go').html() == "Pause") {
+			  	  $("#go").html('Resume');
+			      ospritz.pause();
+		    	} else if ($('#go').html() == "Resume") {
+		  	  	$("#go").html('Pause');
+	  		    ospritz.resume();
+  			  }
+        }
+      } else if (e.which == 37){//left arrow
+      	var a = e.target;
+      	var b = $('#text')[0];
+      	if (a != b) {
+          e.preventDefault();
+          ospritz.left();
+        }
+      } else if (e.which == 39){//right arrow
+      	var a = e.target;
+      	var b = $('#text')[0];
+      	if (a != b) {
+          e.preventDefault();
+          ospritz.right();
+        }
+      } else if (e.which == 38){//up arrow
+      	var a = e.target;
+      	var b = $('#text')[0];
+      	if (a != b) {
+          e.preventDefault();
+          ospritz.up();
+        }
+      } else if (e.which == 40){//down arrow
+      	var a = e.target;
+      	var b = $('#text')[0];
+      	if (a != b) {
+          e.preventDefault();
+          ospritz.down();
+        }
+      }   
+    });
+    $('#text').focus();
+	});
+
+	</script>
+</head>
+<body>
+	<nav id = 'nav'>
+		<h1>NewsBurst</h1>
+		<p>Quickly devour the New York Times</p>
+		<div>
+			<h2>Welcome {{session['fname']}}!</h2>
+			<p><a href="/logout">Logout</a></p>
+			<form action = '/story_refresh' method 'get'>
+				<button>Refresh Stories</button>
+			</form>
+		</div>
+	</nav>
+	<input type = 'hidden' id="text" value ="{{session['loaded_story']['abstract']}}" rows="1">
+<br/><br/>
+<center>
+	<form action = '/save_story' method = 'post'>
+		<input type = 'hidden' name = 'story_id' value = "{{session['loaded_story']['id']}}">
+		<button class="btn btn-info">Save story for later
+		</button>
+	</form>
+	<div id="word">
+			<span class="left text"><span class="text"></span></span>
+			<span class="pivot "></span>
+			<span class="right "></span>
+		</div>
+	</div>
+	<div>
+		<div class = 'row'>
+		Words per minute: <input id="wpm" type="number" value="500" size="10" style="width:50px;"/>
+		</div>
+		<div class = 'row'>
+		<button id="go" type="button" class="btn btn-success">Start</button>
+		</div>
+		<div class = 'row'>
+		<button id="restart" type="button" class="btn btn-warning">Restart</button>
+		</div>
+	</div>
+	<div class = 'loaded_story'>Loaded Story: {{session['loaded_story']['title']}}</div>
+</center>
+<div class = 'row'>
+	<div class="col-xs-2"></div>
+	<div class="col-xs-4 story_holder">
+		STORIES
+		<ul class = 'stories'>
+		{% for story in stories %}
+			<li><a href="/load_story/{{story['id']}}">{{story['title']}}</a></li>
+		{% endfor %}
+		</ul>
+	</div>
+	<div class="col-xs-2"></div>
+	<div class="col-xs-4 reading_list_holder">
+		READING LIST
+		<ul class = 'reading_list'>
+			{% for story in saved_stories %}
+				<li><a href="{{story['url']}}">{{story['title']}}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+<div class = 'row'>
+	<div class="col-xs-3"></div>
+	<div class="col-xs-6 favorites_holder">
+		FAVORITES
+	</div>
+	<div class="col-xs-3"></div>
+</div>
+	</body>
+	</html>
