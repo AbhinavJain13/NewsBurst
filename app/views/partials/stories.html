@@ -1,0 +1,9 @@
+<table class="table table-hover" id = 'top_story_table'>
+	{% for story in stories %}
+		<tr>
+			<td>
+				<a class = 'load_link' href ="/load_story/{{story['id']}}">{{story['title']}}</a>
+			</td>
+		</tr>
+	{% endfor %}
+</table>

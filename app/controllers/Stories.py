@@ -34,16 +34,22 @@ class Stories(Controller):
 		else:
 			total_avg_speed = '--'
 
+		print 'speed data/////////////////'
+		print speed_data
+
 
 		return self.load_view('stories/index.html', stories=stories, saved_stories=saved_stories, popular_stories=popular_stories, average_user_speed=average_user_speed, total_avg_speed=total_avg_speed)
 
 	def load(self, id):
 		print 'entering load'
+		print id
+		print '=================='
         # id variable is passed from url
         
         # Get story information from database
 		story = self.models['Story'].get_story_by_id(id)[0]
-
+		print story
+		print story['id']
         # Set up session variable to load story
 
 		session['loaded_story'] = {
@@ -53,11 +59,20 @@ class Stories(Controller):
 			'published_at' : story['published_at']
 			}
 
+		# return self.load_view('partials/load.html')
+		# return jsonify(session['loaded_story'])
+		# return session['loaded_story']
 		return redirect('/show_stories')
 
 	def save(self):
+
+		print 'SAVING STORY --------------------'
+
+
 		session.pop('loaded_story')
 		story_id = request.form['story_id']
+
+		print story_id
 		user_id = session['id']
 
 		self.models['Story'].add_story(story_id,user_id)
@@ -82,5 +97,23 @@ class Stories(Controller):
 
 	def import_stories(self):
 		print '*** import_stories'
-		return self.models['Story'].import_stories()
+		self.models['Story'].import_stories()
+
+		stories = self.models['Story'].get_all()
+
+		return self.load_view('partials/stories.html', stories=stories)
+
+	def remove(self):
+		story_id = request.form
+		
+		for id in story_id:
+			story_id = story_id[id]
+
+		
+		user_id = session['id']
+
+		self.models['Story'].remove(story_id,user_id)
+
+		
+		return redirect('/show_stories')
 

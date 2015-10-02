@@ -57,6 +57,11 @@ class Story(Model):
 		query = "SELECT stories.title, stories.url, stories.id, count(users.id) as saves FROM stories JOIN adds ON adds.article_id = stories.id JOIN users ON adds.user_id = users.id GROUP BY stories.id ORDER BY saves desc"
 		return self.db.query_db(query)
 
+	def remove(self, story_id, user_id):
+		query ="DELETE from adds WHERE user_id = '{}' AND article_id = '{}'".format(user_id,story_id)
+		self.db.query_db(query)
+		return
+
 	def import_stories(self):
 		res = requests.get('http://api.nytimes.com/svc/news/v3/content/all/world?api-key=48bbb9068c763e07d418c6d8bb251c85:7:73103777')
 
@@ -96,12 +101,11 @@ class Story(Model):
 			query = "SELECT * FROM stories s where s.title='{}'".format(title)
 			result = self.db.query_db(query)
 			print '**** result'
-			print result
+			# print result
 			if not result:
 				query = "INSERT INTO stories (section, subsection, title, abstract, url, created_at, updated_at, published_at) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(section, subsection, title, abstract, url, created_at, updated_at, published_at)
 				print query
 				result = self.db.query_db(query)
 			else:
 				print '**** skipped duplicate story'
-
-		return redirect('/show_stories')
+		return True

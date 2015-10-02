@@ -11,17 +11,9 @@
 	<script type="text/javascript" src="{{url_for('static', filename='open-spritz.js') }}"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="{{url_for('static', filename='main.js') }}"></script>
+	<script type="text/javascript" src="{{url_for('static', filename='newsburst.js') }}"></script>
 </head>
 <body>
-	<script type="text/javascript">
-	$(document).ready(function() {
-    	console.log("ready!");
-		$("#go").click(function(){
-			$.post( "/record_speed", $( "#wpm" ).val() );
-		})
-
-	});
-	</script>
 	<header>
 		<div class="page-header">
 			<h1>News<span class='red'>Burst</span> <small>Quickly devour the <em>New York Times</em></small></h1>
@@ -34,24 +26,23 @@
 		<div class="col-xs-2 col-md-1"></div>
 		<div class="col-xs-8 col-md-6">
 			<p class="lead">Welcome to News<span class='red'>Burst</span>, the best tool for taking a quick pulse of the day's events, as reported by the New York Times.</p>
-			<p>Click on any headline below to load a news summary into the <a href="#loaded_story">speed reading viewer</a>, then choose a speed and press play! To save the story for later, just hit the Add to Reading List button.</p>
 		</div>
 	</div>
 	<center>
-		<div id = 'loaded_story'><p class = 'lead'>Loaded Story: </p><p class = 'lead'><strong>{{session['loaded_story']['title']}}</strong></p>
+		<div id = 'loaded_story'><p class = 'lead'>Loaded Story: </p><p><strong>{{session['loaded_story']['title']}}</strong></p>
+		<input type = 'hidden' id="text" name = 'text' value ="{{session['loaded_story']['abstract']}}" rows="1">
 		</div>
 		<div id="word">
 			<span class="left text"><span class="text"></span></span>
 			<span class="pivot "></span>
 			<span class="right "></span>
 		</div>
-		<input type = 'hidden' id="text" value ="{{session['loaded_story']['abstract']}}" rows="1">
 	</center>
 	<div class = 'row controls'>
 		<center>
 			<form>
-				<button id="go" type="button" class="btn btn-success">Start</button>
-				<button id="restart" type="button" class="btn btn-warning">Replay</button>
+				<!-- <button id="go" type="button" class="btn btn-success">Start</button> -->
+				<button id="restart" type="button" class="btn btn-success">Play</button>
 			</form>
 			<form id = 'save' action = '/save_story' method = 'post'>
 				<input type = 'hidden' name = 'story_id' value = "{{session['loaded_story']['id']}}">
@@ -60,9 +51,10 @@
 				<input id="wpm" class="form-control" name = 'wpm' type="number" value="450" size="14"/>
 			</form>
 			<div id = 'stats'>
-				<p class = 'lead'>Your Average Speed: {{average_user_speed}} wpm</p>
-				<p class = 'lead'>Average News<span class = 'red'>Burst</span> Speed: {{total_avg_speed}} wpm</p>
+				<p class = 'lead'>Your Average Speed: <span class = 'red'>{{average_user_speed}} </span>wpm</p>
+				<p class = 'lead'>Average News<span class = 'red'>Burst</span> Speed: <span class = 'red'>{{total_avg_speed}}</span> wpm</p>
 			</div>
+			<p class = 'about'>Click on any headline below to load a news summary into the speed reading viewer, then choose a speed and press play! To save the story for later, just hit the Add to Reading List button.</p>
 		</center>
 	</div>
 	<div class = 'row'>
@@ -71,31 +63,15 @@
 			<p class = 'lead top_stories'><strong>Top Stories</strong></p>
 			<center>
 				<form action = '/stories/import' method 'get'>
-					<button class="btn btn-default"> Refresh Stories</button>
-					<div class="dropdown">
-						<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Pick a category <span class="caret"></span></button>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-						<li><a tabindex="-1" href="#">Arts</a></li>
-						<li><a tabindex="-1" href="#">Books</a></li>
-						<li><a tabindex="-1" href="#">Business</a></li>
-						<li><a tabindex="-1" href="#">Fashion &amp; Style</a></li>
-						<li><a tabindex="-1" href="#">Food</a></li>
-						<li><a tabindex="-1" href="#">Health</a></li>
-						<li><a tabindex="-1" href="#">Movies</a></li>
-						<li><a tabindex="-1" href="#">Science</a></li>
-						<li><a tabindex="-1" href="#">Sports</a></li>
-						<li><a tabindex="-1" href="#">Technology</a></li>
-						<li><a tabindex="-1" href="#">Travel</a></li>
-						<li><a tabindex="-1" href="#">U.S.</a></li>
-						<li><a tabindex="-1" href="#">Week in Review</a></li>
-						<li><a tabindex="-1" href="#">World</a></li>
-						</ul>
-					</div>
+					<button class="btn btn-default refresh"> Refresh Stories</button>
 				</form>
 			</center>
-			<table class="table table-hover">
+			<table class="table table-hover" id = 'top_story_table'>
 				{% for story in stories %}
-					<tr><td><a href="/load_story/{{story['id']}}">{{story['title']}}</a></td></tr>
+					<tr>
+						<td><a class = 'load_link' href ="/load_story/{{story['id']}}">{{story['title']}}</a>
+						</td>
+					</tr>
 				{% endfor %}
 			</table>
 		</div>
@@ -109,7 +85,15 @@
 			</center>
 			<table class="table table-hover">
 				{% for story in saved_stories %}
-					<tr><td><a class = 'saved' href="{{story['url']}}">{{story['title']}}</a></td></tr>
+					<tr>
+						<td><a class = 'saved' href="{{story['url']}}">{{story['title']}}</a></td>
+						<td>
+							<form action = '/remove' method = 'post'>
+								<input type = 'hidden' name = 'story_id' value = "{{story['id']}}">
+							<button class="btn btn-danger">Remove</button>
+						</form>
+						</td>
+					</tr>
 				{% endfor %}
 			</table>
 		</div>
@@ -121,25 +105,19 @@
 		<table class="table table-hover">
 			<tr>
 				<th>
-					Headline
+					Headline (click to load into speed reader)
 				</th>
 				<th>
 					Total Saves
-				</th>
-				<th>
-					Actions
 				</th>
 			</tr>
 			{% for story in popular_stories %}
 			<tr>
 				<td>
-					<a href="{{story['url']}}">{{story['title']}}</a>
+					<a href="/load_story/{{story['id']}}">{{story['title']}}</a>
 				</td>
 				<td>
 					{{story['saves']}}
-				</td>
-				<td>
-					<a href="/load_story/{{story['id']}}">Load Into Speed Reader</a>
 				</td>
 			</tr>
 			{% endfor %}
