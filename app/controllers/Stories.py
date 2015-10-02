@@ -24,10 +24,15 @@ class Stories(Controller):
 
 		speed_data = self.models['Story'].get_speed_data(id)
 
-		average_user_speed = int(speed_data[0])
-		total_avg_speed = int(speed_data[1])
-		print average_user_speed
-		print total_avg_speed
+		if speed_data[0]:
+			average_user_speed = int(speed_data[0])
+		else:
+			average_user_speed = '--'
+
+		if speed_data[1]:
+			total_avg_speed = int(speed_data[1])
+		else:
+			total_avg_speed = '--'
 
 
 		return self.load_view('stories/index.html', stories=stories, saved_stories=saved_stories, popular_stories=popular_stories, average_user_speed=average_user_speed, total_avg_speed=total_avg_speed)
