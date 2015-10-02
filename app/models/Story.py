@@ -76,26 +76,26 @@ class Story(Model):
 
 		for i in range( len(res2['results']) ):
 			print '*** article {}'.format(i)
-			section      = res2['results'][i]['section'].encode('utf-8')
-			subsection   = res2['results'][i]['subsection'].encode('utf-8')
-			url          = res2['results'][i]['url'].encode('utf-8')
-			created_at   = res2['results'][i]['created_date'].encode('utf-8')
-			updated_at   = res2['results'][i]['updated_date'].encode('utf-8')
-			published_at = res2['results'][i]['published_date'].encode('utf-8')
-			title        = res2['results'][i]['title']
-			abstract     = res2['results'][i]['abstract']
+			section      = res2['results'][i]['section'].encode('utf-8', 'ignore')
+			subsection   = res2['results'][i]['subsection'].encode('utf-8', 'ignore')
+			url          = res2['results'][i]['url'].encode('utf-8', 'ignore')
+			created_at   = res2['results'][i]['created_date'].encode('utf-8', 'ignore')
+			updated_at   = res2['results'][i]['updated_date'].encode('utf-8', 'ignore')
+			published_at = res2['results'][i]['published_date'].encode('utf-8', 'ignore')
+			title        = res2['results'][i]['title'].encode('ascii', 'ignore')
+			abstract     = res2['results'][i]['abstract'].encode('ascii', 'ignore')
 
 			# convert Unicode chars to ascii with escape chars for SQL
-			title = title.replace(u'\u2010', "-")
-			title = title.replace(u'\u2018', "\\'")
-			title = title.replace(u'\u2019', "\\'")
-			title = title.replace(u'\u201c', "\\\"")
-			title = title.replace(u'\u201d', "\\\"")
-			abstract = abstract.replace(u'\u2010', "-")
-			abstract = abstract.replace(u'\u2018', "\\'")
-			abstract = abstract.replace(u'\u2019', "\\'")
-			abstract = abstract.replace(u'\u201c', "\\\"")
-			abstract = abstract.replace(u'\u201d', "\\\"")
+#			title = title.replace(u'\u2010', "-")
+#			title = title.replace(u'\u2018', "\\'")
+#			title = title.replace(u'\u2019', "\\'")
+#			title = title.replace(u'\u201c', "\\\"")
+#			title = title.replace(u'\u201d', "\\\"")
+#			abstract = abstract.replace(u'\u2010', "-")
+#			abstract = abstract.replace(u'\u2018', "\\'")
+#			abstract = abstract.replace(u'\u2019', "\\'")
+#			abstract = abstract.replace(u'\u201c', "\\\"")
+#			abstract = abstract.replace(u'\u201d', "\\\"")
 
 			# do not insert story if it's already in DB
 			query = "SELECT * FROM stories s where s.title='{}'".format(title)
