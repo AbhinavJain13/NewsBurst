@@ -1,3 +1,25 @@
+.page-header {
+	display: inline-block;
+	margin-left: 5%;
+}
+
+.red {
+	color: red;
+}
+
+#word {
+	background-color: lightgrey;
+}
+
+#loaded_story{
+	margin: 2% 5%;
+}
+
+#welcome {
+	margin: 2% 5%;
+}
+
+
 #nav {
 	padding-left: 5%;
 }
@@ -7,6 +29,56 @@
 	border: 1px solid lightgrey;
 	min-height: 60px;
 	letter-spacing: 3;
+	margin-top: 5%;
+	width: 50%;
+}
+
+#save {
+	display: inline-block;
+}
+
+#restart {
+	margin-right: 5%;
+}
+#wpm_label {
+	margin-right: 2%;
+}
+.controls,
+.wpm {
+	margin-top: 2%;
+	margin-left: 3%;
+/*	width: 15%;
+	text-align: center;*/
+}
+
+#loaded_story {
+	margin-top: 2%;
+}
+
+input#wpm.form-control {
+	width: 15%;
+	text-align: center;
+	display: inline;
+}
+
+#wpm_label {
+	margin-left: 2%;
+}
+
+p.lead.top_stories,
+.reading_list,
+.saved_stories {
+	margin-top: 10%;
+	text-align: center;
+}
+
+.reading_list_holder {
+	margin-right: 5%;
+}
+
+
+.saved {
+	color: #D46071;
 }
 #word > .container {
 	vertical-align: middle;

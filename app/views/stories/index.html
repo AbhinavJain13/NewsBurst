@@ -16,88 +16,98 @@
 	<script type="text/javascript">
 	$(document).ready(function() {
     	console.log("ready!");
-	$("#go").click(function(){
-		$.post( "/record_speed", $( "#wpm" ).val() );
-
-	})
+		$("#go").click(function(){
+			$.post( "/record_speed", $( "#wpm" ).val() );
+		})
 
 	});
 	</script>
+	<header>
+		<div class="page-header">
+			<h1>News<span class='red'>Burst</span> <small>Quickly devour the <em>New York Times</em></small></h1>
+		</div>
+		<div id="welcome">
+				<h5>Welcome {{session['fname']}}! <a href="/logout">Click here to logout</a></h5>
+		</div>
+	</header>
 	<nav id = 'nav'>
-		<h1>NewsBurst</h1>
-		<p>Quickly devour the New York Times</p>
-		<div>
-			<h2>Welcome {{session['fname']}}!</h2>
-			<p><a href="/logout">Logout</a></p>
-			<form action = '/stories/import' method 'get'>
-				<button>Refresh Stories</button>
-			</form>
+	</div>
+	<div class = 'row'>
+		<div class="col-xs-2 col-md-1"></div>
+		<div class="col-xs-8 col-md-6">
+			<p class="lead">Welcome to News<span class='red'>Burst</span>, the best tool for taking a quick pulse of the day's events, as reported by the New York Times.</p>
+			<p>Click on any headline below to load a news summary into the <a href="#loaded_story">speed reading viewer</a>, then choose a speed and press play! To save the story for later, just hit the Add to Reading List button.</p>
 		</div>
-		<div id = 'stats'>
-			<h3>Your Average Speed: {{average_user_speed}} words per minute</h3>
-			<h3>Average Speed for All Other Users: {{total_avg_speed}} words per minute</h3>
+	</div>
+	<center>
+		<div id = 'loaded_story'><p class = 'lead'>Loaded Story: </p><p class = 'lead'><strong>{{session['loaded_story']['title']}}</strong></p>
 		</div>
-	</nav>
-	<input type = 'hidden' id="text" value ="{{session['loaded_story']['abstract']}}" rows="1">
-<!-- <br/><br/> -->
-<center>
-	<form action = '/save_story' method = 'post'>
-		<input type = 'hidden' name = 'story_id' value = "{{session['loaded_story']['id']}}">
-		<button class="btn btn-info">Save story for later
-		</button>
-	</form>
-	<div id="word">
+		<div id="word">
 			<span class="left text"><span class="text"></span></span>
 			<span class="pivot "></span>
 			<span class="right "></span>
 		</div>
-	</div>
-	<div>
-		<div class = 'row'>
+		<input type = 'hidden' id="text" value ="{{session['loaded_story']['abstract']}}" rows="1">
+	</center>
+	<div class = 'row controls'>
+		<center>
 			<form>
-				Words per minute: <input id="wpm" name = 'wpm' type="number" value="400" size="10" style="width:50px;"/>
-				</div>
-				<div class = 'row'>
 				<button id="go" type="button" class="btn btn-success">Start</button>
-				</div>
-				<div class = 'row'>
-				<button id="restart" type="button" class="btn btn-warning">Restart</button>
+				<button id="restart" type="button" class="btn btn-warning">Replay</button>
 			</form>
+			<form id = 'save' action = '/save_story' method = 'post'>
+				<input type = 'hidden' name = 'story_id' value = "{{session['loaded_story']['id']}}">
+				<button class="btn btn-info"> Add to Reading List   <span class="glyphicon glyphicon-saved" aria-hidden="true"></button>
+				<label id = 'wpm_label' for="wpm">Words per minute:</label>
+				<input id="wpm" class="form-control" name = 'wpm' type="number" value="450" size="14"/>
+			</form>
+			<div id = 'stats'>
+				<p class = 'lead'>Your Average Speed: {{average_user_speed}} wpm</p>
+				<p class = 'lead'>Average News<span class = 'red'>Burst</span> Speed: {{total_avg_speed}} wpm</p>
+			</div>
+		</center>
+	</div>
+	<div class = 'row'>
+		<div class="col-xs-1 col-md-1"></div>
+		<div id = 'story_holder' class="col-xs-5 col-md-4">
+			<p class = 'lead top_stories'><strong>Top Stories</strong></p>
+			<center>
+				<form action = '/stories/import' method 'get'>
+					<button class="btn btn-default"> Refresh Stories</button>
+				</form>
+			</center>
+			<table class="table table-hover">
+				{% for story in stories %}
+					<tr><td><a href="/load_story/{{story['id']}}">{{story['title']}}</a></td></tr>
+				{% endfor %}
+			</table>
+		</div>
+		<div class="col-xs-1 col-md-1"></div>
+		<div class="col-xs-5 col-md-4 reading_list_holder">
+			<p class = 'lead reading_list'><strong>{{session['fname']}}'s Reading List</strong></p>
+			<center>
+				<form action = '#favorites_holder'>
+					<button class="btn btn-default">See Most-Saved Stories</button>
+				</form>
+			</center>
+			<table class="table table-hover">
+				{% for story in saved_stories %}
+					<tr><td><a class = 'saved' href="{{story['url']}}">{{story['title']}}</a></td></tr>
+				{% endfor %}
+			</table>
 		</div>
 	</div>
-	<div class = 'loaded_story'>Loaded Story: {{session['loaded_story']['title']}}</div>
-</center>
-<div class = 'row'>
+	<div class = 'row'>
 	<div class="col-xs-2"></div>
-	<div class="col-xs-4 story_holder">
-		STORIES
-		<ul class = 'stories'>
-		{% for story in stories %}
-			<li><a href="/load_story/{{story['id']}}">{{story['title']}}</a></li>
-		{% endfor %}
-		</ul>
-	</div>
-	<div class="col-xs-2"></div>
-	<div class="col-xs-4 reading_list_holder">
-		READING LIST
-		<ul class = 'reading_list'>
-			{% for story in saved_stories %}
-				<li><a href="{{story['url']}}">{{story['title']}}</a></li>
-			{% endfor %}
-		</ul>
-	</div>
-</div>
-<div class = 'row'>
-	<div class="col-xs-3"></div>
-	<div class="col-xs-6 favorites_holder">
-		FAVORITES
-		<table>
+	<div class="col-xs-8" id = 'favorites_holder'>
+		<p class = 'lead saved_stories'><strong>Most Saved Stories</strong></p>
+		<table class="table table-hover">
 			<tr>
 				<th>
 					Headline
 				</th>
 				<th>
-					Number of Reading Lists
+					Total Saves
 				</th>
 				<th>
 					Actions
@@ -106,20 +116,17 @@
 			{% for story in popular_stories %}
 			<tr>
 				<td>
-					{{story['title']}}
+					<a href="{{story['url']}}">{{story['title']}}</a>
 				</td>
 				<td>
 					{{story['saves']}}
 				</td>
 				<td>
 					<a href="/load_story/{{story['id']}}">Load Into Speed Reader</a>
-					<a href="{{story['url']}}">Visit Full Story</a>
 				</td>
 			</tr>
 			{% endfor %}
 		</ul>
 	</div>
-	<div class="col-xs-3"></div>
-</div>
-	</body>
-	</html>
+</body>
+</html>
