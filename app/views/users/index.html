@@ -11,7 +11,12 @@
 	</head>
 	<body>
 		<div class='wrapper'>
+			<div class='header'>
+				<h1>News<span id="red">Burst</span></h1>
+				<p>Quickly devour the New York Times</p>
+			</div>
 			<div class='registration'>
+
 				{% with messages = get_flashed_messages(with_categories=true) %}
 					{% if messages %}
 						<ul>
@@ -21,8 +26,11 @@
 			    		</ul>
 					{% endif %}
 				{% endwith %}
-				<h3>Registration</h3>
+				
 				<form class="form-horizontal" action='/users' method='POST'>
+					<div class='form-group'>
+						<label class='control-label col-sm-4'><h3>Registration</h3></label>
+					</div>
 					<div class='form-group'>
 						<label class='control-label col-sm-4' for='fname'>First Name:</label>
 						<div class='col-sm-8'>
@@ -53,8 +61,10 @@
 							<input type='password' class='form-control' name='password2' placeholder=''>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-primary btn-lg" id="register_btn">Register</button>
-					
+					<div class='form-group'>
+						<label class='control-label col-sm-4'>
+						<button type="submit" class="btn btn-primary btn-lg" id="register_btn">Register</button></label>
+					</div>
 				</form>
 			</div>  <!-- registration -->
 			<div class='login'>
@@ -69,8 +79,11 @@
 			    		{% endif %}
 					{% endif %}
 				{% endwith %}
-				<h3>Login</h3>
+
 				<form class="form-horizontal" action='/login' method='POST'>
+					<div class='form-group'>
+						<label class='control-label col-sm-4'><h3>Login</h3></label>
+					</div>
 					<div class='form-group'>
 						<label class='control-label col-sm-4' for='email'>Email:</label>
 						<div class='col-sm-8'>
@@ -83,7 +96,10 @@
 							<input type='password' class='form-control' name='password' placeholder=''>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-primary btn-lg" id="login_btn">Login</button>
+					<div class='form-group'>
+						<label class='control-label col-sm-4'>
+							<button type="submit" class="btn btn-primary btn-lg" id="login_btn">Login</button></label>
+					</div>
 				</form>
 			</div> <!-- login -->
 		</div> <!-- wrapper -->
