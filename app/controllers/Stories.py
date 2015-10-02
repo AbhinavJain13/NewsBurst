@@ -17,8 +17,20 @@ class Stories(Controller):
 		stories = self.models['Story'].get_all()
 
 		id = session['id']
+		
 		saved_stories = self.models['Story'].get_saved_stories_by_user_id(id)
-		return self.load_view('stories/index.html', stories=stories, saved_stories=saved_stories)
+		
+		popular_stories = self.models['Story'].get_popular_stories()
+
+		speed_data = self.models['Story'].get_speed_data(id)
+
+		average_user_speed = int(speed_data[0])
+		total_avg_speed = int(speed_data[1])
+		print average_user_speed
+		print total_avg_speed
+
+
+		return self.load_view('stories/index.html', stories=stories, saved_stories=saved_stories, popular_stories=popular_stories, average_user_speed=average_user_speed, total_avg_speed=total_avg_speed)
 
 	def load(self, id):
 		print 'entering load'
@@ -45,18 +57,23 @@ class Stories(Controller):
 
 		self.models['Story'].add_story(story_id,user_id)
 
-
 		return redirect('/show_stories')
 
-	# def refresh(self):
-	# 	print 'entering REFRESH///////////'
-	# 	result = self.models['Story'].import_stories()
+	def record(self):
+		speed = request.form
 
-	# 	return redirect('/show_stories')
+		for value in speed:
+			speed = value
+		
+		speed_id = self.models['Story'].record_speed(speed)[0]['id']
 
+		user_id = session['id']
 
-    # def index(self):
-    #     return self.load_view('/stories/index.html')
+		story_id = session['loaded_story']['id']
+
+		self.models['Story'].record_speedread(speed_id,user_id,story_id)
+
+		return redirect('/show_stories')
 
 	def import_stories(self):
 		print '*** import_stories'
