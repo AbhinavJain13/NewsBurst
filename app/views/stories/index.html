@@ -50,11 +50,14 @@
 				<label id = 'wpm_label' for="wpm">Words per minute:</label>
 				<input id="wpm" class="form-control" name = 'wpm' type="number" value="450" size="14"/>
 			</form>
+			<div id ='about'>
+				<button id="toggle_button" class="btn btn-warning">Show/Hide Directions</button>
+				<p id = 'about_text' display = 'hidden'>Click on any headline below to load a news summary into the speed reading viewer, then choose a speed and press play! To save the story for later, just hit the Add to Reading List button.</p>
+			</div>
 			<div id = 'stats'>
 				<p class = 'lead'>Your Average Speed: <span class = 'red'>{{average_user_speed}} </span>wpm</p>
 				<p class = 'lead'>Average News<span class = 'red'>Burst</span> Speed: <span class = 'red'>{{total_avg_speed}}</span> wpm</p>
 			</div>
-			<p class = 'about'>Click on any headline below to load a news summary into the speed reading viewer, then choose a speed and press play! To save the story for later, just hit the Add to Reading List button.</p>
 		</center>
 	</div>
 	<div class = 'row'>

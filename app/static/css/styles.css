@@ -11,6 +11,16 @@
 	background-color: lightgrey;
 }
 
+#toggle_button {
+	margin: 2%;
+}
+
+#about_text {
+	margin: 2%;
+	width: 60%;
+	font-weight: bold;
+}
+
 #loaded_story{
 	margin: 2% 5%;
 }

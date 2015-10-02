@@ -3,6 +3,15 @@ $(document).ready(function() {
 	$("#restart").click(function(){
 		$.post( "/record_speed", $( "#wpm" ).val() );
 	})
+
+	$("#about_text").hide();
+
+	$("#toggle_button").click(function(){
+		$("#about_text").toggle("fast");
+		
+	})
+
+
 });
 
 
