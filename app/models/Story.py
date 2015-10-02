@@ -69,19 +69,39 @@ class Story(Model):
 		print 'keys: ', res2.keys()
 		print 'num_results:', res2['num_results']
 
-		for i in range(10):
+		for i in range(20):
 			print '*** article {}'.format(i)
 			section      = res2['results'][i]['section'].encode('utf-8')
 			subsection   = res2['results'][i]['subsection'].encode('utf-8')
-			title        = res2['results'][i]['title'].encode('utf-8')
-			abstract     = res2['results'][i]['abstract'].encode('utf-8')
 			url          = res2['results'][i]['url'].encode('utf-8')
 			created_at   = res2['results'][i]['created_date'].encode('utf-8')
 			updated_at   = res2['results'][i]['updated_date'].encode('utf-8')
 			published_at = res2['results'][i]['published_date'].encode('utf-8')
+			title        = res2['results'][i]['title']
+			abstract     = res2['results'][i]['abstract']
 
-			query = "INSERT INTO stories (section, subsection, title, abstract, url, created_at, updated_at, published_at) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(section, subsection, title, abstract, url, created_at, updated_at, published_at)
-			print query
+			# convert Unicode chars to ascii with escape chars for SQL
+			title = title.replace(u'\u2010', "-")
+			title = title.replace(u'\u2018', "\\'")
+			title = title.replace(u'\u2019', "\\'")
+			title = title.replace(u'\u201c', "\\\"")
+			title = title.replace(u'\u201d', "\\\"")
+			abstract = abstract.replace(u'\u2010', "-")
+			abstract = abstract.replace(u'\u2018', "\\'")
+			abstract = abstract.replace(u'\u2019', "\\'")
+			abstract = abstract.replace(u'\u201c', "\\\"")
+			abstract = abstract.replace(u'\u201d', "\\\"")
+
+			# do not insert story if it's already in DB
+			query = "SELECT * FROM stories s where s.title='{}'".format(title)
 			result = self.db.query_db(query)
+			print '**** result'
+			print result
+			if not result:
+				query = "INSERT INTO stories (section, subsection, title, abstract, url, created_at, updated_at, published_at) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')".format(section, subsection, title, abstract, url, created_at, updated_at, published_at)
+				print query
+				result = self.db.query_db(query)
+			else:
+				print '**** skipped duplicate story'
 
 		return redirect('/show_stories')
