@@ -8,6 +8,34 @@ class Story(Model):
 	def __init__(self):
 		super(Story, self).__init__()
 
+
+	def record_speed(self,speed):
+
+		query = "SELECT id FROM speeds WHERE speed = '{}'".format(speed)
+		result = self.db.query_db(query)
+		if not result:
+			query = "INSERT INTO speeds (speed) VALUES ('{}')".format(speed)
+			self.db.query_db(query)
+			query = "SELECT id FROM speeds ORDER BY id DESC LIMIT 1"
+			result = self.db.query_db(query)
+		return result
+
+	def record_speedread(self,speed,user,story):
+
+		query = "INSERT INTO speedreads (user_id,speed_id,story_id,created_at) VALUES ('{}','{}','{}',NOW())".format(user,speed,story)
+		self.db.query_db(query)
+		return True
+
+	def get_speed_data(self,id):
+		query = "SELECT avg(speeds.speed) as average_user_speed FROM speeds JOIN speedreads ON speedreads.speed_id = speeds.id JOIN users ON users.id = speedreads.user_id WHERE users.id = '{}'".format(id)
+		average_user_speed = self.db.query_db(query)[0]['average_user_speed']
+		query = "SELECT AVG(speeds.speed) as total_avg_speed FROM speeds JOIN speedreads ON speedreads.speed_id = speeds.id JOIN users ON users.id = speedreads.user_id WHERE users.id != '{}'".format(id)
+		total_avg_speed = self.db.query_db(query)[0]['total_avg_speed']
+
+		speed_data = [average_user_speed,total_avg_speed]
+		
+		return speed_data
+
 	def get_all(self):
 		query = "SELECT * FROM stories ORDER BY id DESC LIMIT 10"
 		return self.db.query_db(query)
@@ -23,6 +51,10 @@ class Story(Model):
 
 	def get_saved_stories_by_user_id(self,id):
 		query = "SELECT stories.title, stories.id,stories.url FROM stories JOIN adds ON adds.article_id = stories.id JOIN users on adds.user_id = users.id WHERE users.id = '{}'".format(id)
+		return self.db.query_db(query)
+
+	def get_popular_stories(self):
+		query = "SELECT stories.title, stories.url, stories.id, count(users.id) as saves FROM stories JOIN adds ON adds.article_id = stories.id JOIN users ON adds.user_id = users.id GROUP BY stories.id ORDER BY saves desc"
 		return self.db.query_db(query)
 
 	def import_stories(self):
