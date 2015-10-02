@@ -88,13 +88,32 @@
 </head>
 <body>
 	<nav id = 'nav'>
-		<h1>NewsBurst</h1>
+		<h1>News<span id="red">Burst</span></h1>
 		<p>Quickly devour the New York Times</p>
 		<div>
-			<h2>Welcome {{session['fname']}}!</h2>
+			<p>Welcome {{session['fname']}}!</p>
 			<p><a href="/logout">Logout</a></p>
 			<form action = '/stories/import' method 'get'>
-				<button>Refresh Stories</button>
+				<button class="btn btn-default">Refresh Stories</button>
+				<div class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Pick a category <span class="caret"></span></button>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					<li><a tabindex="-1" href="#">Arts</a></li>
+					<li><a tabindex="-1" href="#">Books</a></li>
+					<li><a tabindex="-1" href="#">Business</a></li>
+					<li><a tabindex="-1" href="#">Fashion &amp; Style</a></li>
+					<li><a tabindex="-1" href="#">Food</a></li>
+					<li><a tabindex="-1" href="#">Health</a></li>
+					<li><a tabindex="-1" href="#">Movies</a></li>
+					<li><a tabindex="-1" href="#">Science</a></li>
+					<li><a tabindex="-1" href="#">Sports</a></li>
+					<li><a tabindex="-1" href="#">Technology</a></li>
+					<li><a tabindex="-1" href="#">Travel</a></li>
+					<li><a tabindex="-1" href="#">U.S.</a></li>
+					<li><a tabindex="-1" href="#">Week in Review</a></li>
+					<li><a tabindex="-1" href="#">World</a></li>
+					</ul>
+				</div>
 			</form>
 		</div>
 	</nav>
@@ -117,7 +136,8 @@
 		Words per minute: <input id="wpm" type="number" value="500" size="10" style="width:50px;"/>
 		</div>
 		<div class = 'row'>
-		<button id="go" type="button" class="btn btn-success">Start</button>
+<!--		<button id="go" type="button" class="btn btn-success">Start</button>  -->
+			<span class="glyphicon glyphicon-play" id="go" aria-hidden="true"></span>
 		</div>
 		<div class = 'row'>
 		<button id="restart" type="button" class="btn btn-warning">Restart</button>

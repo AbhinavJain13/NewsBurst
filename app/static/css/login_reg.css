@@ -11,7 +11,15 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-bottom: 20px;
-	border: 1px solid black;
+/*	border: 1px solid black;  */
+}
+
+.header {
+	font-weight: bold;
+	margin-bottom: 50px;
+}
+h1 {
+	font-weight: bold;
 }
 
 .registration, .login {
@@ -38,23 +46,12 @@
        padding: 0;
 }
 
-.header h1 {
-	width: 400px;
-	display: inline-block;
-}
-.header p {
-	display: inline-block;
-	text-align: right;
-}
 
-h1 {
-	margin-bottom: 20px;
-}
 
-p, th, td, a {
+/* p, th, td, a {
 	font-size: 20px;
-}
+}  */
 
-.error {
+.error, #red {
 	color: red;
 }

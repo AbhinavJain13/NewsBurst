@@ -37,7 +37,7 @@ class Story(Model):
 		print 'keys: ', res2.keys()
 		print 'num_results:', res2['num_results']
 
-		for i in range(20):
+		for i in range( len(res2['results']) ):
 			print '*** article {}'.format(i)
 			section      = res2['results'][i]['section'].encode('utf-8')
 			subsection   = res2['results'][i]['subsection'].encode('utf-8')

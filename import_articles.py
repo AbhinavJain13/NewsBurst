@@ -22,8 +22,8 @@ def get_articles():
 #	print 'keys: ', res2.keys()
 	print 'num_results:', res2['num_results']
 
-	for i in range(20):
-		section    = res2['results'][i]['section'])
+	for i in range( len(res2['results']) ):
+		section    = res2['results'][i]['section']
 		subsection = res2['results'][i]['subsection']
 		title      = res2['results'][i]['title']
 		abstract   = res2['results'][i]['abstract']
@@ -49,7 +49,7 @@ def get_articles():
 #		print res2['results'][i]['url'].encode('utf-8')
 		print 'section:    {}'.format(section)
 		print 'subsection: {}'.format(subsection)
-		print type(title)
+		print title
 		print abstract
 		print url
 		print

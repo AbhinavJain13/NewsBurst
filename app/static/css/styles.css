@@ -1,5 +1,9 @@
 #nav {
 	padding-left: 5%;
+	font-weight: bold;
+}
+h1 {
+	font-weight: bold;
 }
 
 #word {
@@ -31,4 +35,14 @@
 
 .stories {
 	list-style-type: none;
+}
+
+.glyphicon{
+	padding: 20px;
+	font-size: 30px;
+	border: 1px solid blue;
+}
+
+#red {
+	color: red;
 }
